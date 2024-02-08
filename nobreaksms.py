@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # This file is part of NobreakSMS, see <https://github.com/MestreLion/nobreaksms>
 # Copyright (C) 2024 Rodrigo Silva (MestreLion) <linux@rodrigosilva.com>
 # License: GPLv3 or later, at your choice. See <http://www.gnu.org/licenses/gpl>
