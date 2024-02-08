@@ -291,7 +291,8 @@ def parse_args(argv=None):
     )
 
     args = parser.parse_args(argv)
-    args.debug = args.loglevel == logging.DEBUG
+    args.debug = args.loglevel <= logging.DEBUG
+    args.quiet = args.loglevel >= logging.WARNING
     return args
 
 
@@ -301,14 +302,21 @@ def main(argv: t.Optional[t.List[str]] = None):
     log.debug(args)
 
     ups = NobreakSMS(device=args.device)
-    show(ups.info())
-    show(ups.features())
+
+    # Run command before retrieving statuses, so it reflects any status change
     if args.cmd:
         res = ups.send_command(args.cmd.upper(), *(_.to_bytes(1, "big") for _ in args.args))
         if res:
             print(res)
-    # Show status after command, if any, so it reflects any changes
-    show(ups.status())
+
+    # Show info and features only on debug, or if a command was not executed
+    if args.debug or not args.cmd:
+        show(ups.info())
+        show(ups.features())
+
+    # Always show status, unless executing a command on quiet
+    if not (args.quiet and args.cmd):
+        show(ups.status())
 
 
 if __name__ == '__main__':
